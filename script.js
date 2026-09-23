@@ -225,8 +225,7 @@ function renderFormFields() {
 
   container.innerHTML = "";
 
-  CONFIG.formFields.forEach((field, index) => {
-    const itemCode = `[FIELD_0${index + 1}]`;
+  CONFIG.formFields.forEach((field) => {
     const group = document.createElement("div");
     group.className = "form-field-group";
     group.dataset.fieldId = field.id;
@@ -240,12 +239,7 @@ function renderFormFields() {
     label.htmlFor = `input-${field.id}`;
     label.innerHTML = `${field.label} ${field.required ? '<span class="field-required-star" aria-hidden="true">*</span>' : ''}`;
 
-    const codeSpan = document.createElement("span");
-    codeSpan.className = "field-item-code";
-    codeSpan.textContent = itemCode;
-
     labelRow.appendChild(label);
-    labelRow.appendChild(codeSpan);
     group.appendChild(labelRow);
 
     // Input Control based on type
