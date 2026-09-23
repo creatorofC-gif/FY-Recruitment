@@ -7,7 +7,7 @@ const SPREADSHEET_ID = SCRIPT_PROPS.getProperty("SPREADSHEET_ID") || "";
 const SHEET_NAME = SCRIPT_PROPS.getProperty("SHEET_NAME") || "Registrations";
 const GOOGLE_DRIVE_FOLDER_LINK = SCRIPT_PROPS.getProperty("GOOGLE_DRIVE_FOLDER_LINK") || "148khR8YTpYfPiv3bOzsYP1h0opD4IGOJ";
 
-// Default column order in Google Sheets (Resume column removed as requested)
+// Default column order in Google Sheets (includes direct clickable Resume link)
 const DEFAULT_HEADERS = [
   "Timestamp",
   "Application ID",
@@ -16,6 +16,7 @@ const DEFAULT_HEADERS = [
   "Contact Number",
   "Year",
   "Branch",
+  "Resume",
   "Status"
 ];
 
@@ -144,22 +145,36 @@ function doPost(e) {
         // Try primary target folder: 148khR8YTpYfPiv3bOzsYP1h0opD4IGOJ
         const targetFolderId = "148khR8YTpYfPiv3bOzsYP1h0opD4IGOJ";
         let targetFolder = null;
+        let createdFile = null;
         try {
           targetFolder = DriveApp.getFolderById(targetFolderId);
-          targetFolder.createFile(blob);
+          createdFile = targetFolder.createFile(blob);
           resumeStatus = "Saved to Drive";
         } catch (folderErr) {
           // If permission is denied or folder not found, fallback to script owner's Drive folder
           const fallbackName = "BloomBox FY Resumes 2026-27";
           const fallbackFolders = DriveApp.getFoldersByName(fallbackName);
           const fallback = fallbackFolders.hasNext() ? fallbackFolders.next() : DriveApp.createFolder(fallbackName);
-          fallback.createFile(blob);
-          resumeStatus = "Saved to Fallback (Check 148kh permissions: " + folderErr.message + ")";
+          createdFile = fallback.createFile(blob);
+          resumeStatus = "Saved to Fallback";
+        }
+
+        if (createdFile) {
+          try {
+            createdFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+          } catch (shareErr) {}
+          const fileUrl = createdFile.getUrl();
+          submissionMap["resume"] = '=HYPERLINK("' + fileUrl + '", "📄 View Resume")';
         }
       } catch (driveErr) {
         resumeStatus = "Drive Error: " + driveErr.message;
+        submissionMap["resume"] = "Upload failed: " + driveErr.message;
         Logger.log("Drive save error: " + driveErr.toString());
       }
+    }
+
+    if (!submissionMap["resume"]) {
+      submissionMap["resume"] = "No file";
     }
 
     if (resumeStatus !== "No file") {

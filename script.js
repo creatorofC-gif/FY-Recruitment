@@ -657,13 +657,49 @@ function initFormHandlers() {
   // Submit Another Response Handler
   if (newAppBtn) {
     newAppBtn.addEventListener("click", () => {
+      // 1. Reset standard form fields
       form.reset();
-      form.style.display = "block";
-      const confirmationPanel = document.getElementById("bill-confirmation-panel");
-      if (confirmationPanel) confirmationPanel.style.display = "none";
+
+      // 2. Clear all hidden file inputs & reset dropzones
+      form.querySelectorAll('input[type="file"]').forEach((fi) => {
+        fi.value = "";
+      });
+      form.querySelectorAll(".form-file-dropzone").forEach((dz) => {
+        dz.classList.remove("file-selected", "dragover");
+        const titleEl = dz.querySelector(".dropzone-title");
+        if (titleEl) {
+          titleEl.textContent = "Click or Drag & Drop Resume (PDF)";
+        }
+      });
+
+      // 3. Clear all validation error states
+      form.querySelectorAll(".form-field-group").forEach((grp) => {
+        grp.classList.remove("has-error");
+      });
+      form.querySelectorAll(".field-error-bubble").forEach((bubble) => {
+        bubble.textContent = "";
+      });
+      if (errorBanner) {
+        errorBanner.style.display = "none";
+      }
+
+      // 4. Reset submit button state
       submitBtn.disabled = false;
       submitBtnText.textContent = "CASH IN YOUR OPPORTUNITY";
+      const originalSubtext = submitBtn.querySelector(".btn-subtext");
+      if (originalSubtext) {
+        originalSubtext.textContent = "SUBMIT APPLICATION TO THE COUNCIL →";
+      }
+
+      // 5. Generate a brand new Application ID and fresh timestamp
       initReceiptHeader();
+
+      // 6. Switch view back to form
+      const confirmationPanel = document.getElementById("bill-confirmation-panel");
+      if (confirmationPanel) confirmationPanel.style.display = "none";
+      form.style.display = "block";
+
+      // 7. Smoothly scroll to the receipt form
       form.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }
