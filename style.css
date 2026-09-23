@@ -1232,17 +1232,36 @@ body.comic-theme {
 .bill-calc-row {
   display: flex;
   justify-content: space-between;
-  font-size: 1rem;
+  align-items: baseline;
+  gap: 0.8rem;
+  font-size: clamp(0.85rem, 2.2vw, 1rem);
   font-weight: 700;
-  padding: 0.2rem 0;
+  padding: 0.35rem 0;
   color: #333;
 }
 
+.bill-calc-row .calc-label {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.bill-calc-row .calc-value {
+  text-align: right;
+  font-weight: 800;
+}
+
 .bill-calc-row.total-bold {
-  font-size: 1.18rem;
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
   font-weight: 900;
   color: var(--comic-ink-black);
-  padding: 0.4rem 0;
+  padding: 0.5rem 0;
+  border-top: 1px dashed rgba(0, 0, 0, 0.25);
+  margin-top: 0.3rem;
+}
+
+.bill-calc-row.total-bold .calc-value {
+  color: var(--comic-ink-black);
+  font-weight: 900;
 }
 
 /* Submission Actions Block */
@@ -1634,6 +1653,35 @@ body.comic-theme {
 
   .bill-main-heading {
     font-size: 1.7rem;
+  }
+
+  /* Receipt Subtotal & Commitment on Mobile */
+  .bill-calc-row {
+    font-size: 0.88rem;
+    gap: 0.5rem;
+  }
+
+  .bill-calc-row.total-bold {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    padding: 0.65rem 0.8rem;
+    background: rgba(0, 0, 0, 0.04);
+    border: 1.5px dashed var(--comic-ink-black);
+    margin: 0.5rem 0;
+  }
+
+  .bill-calc-row.total-bold .calc-label {
+    font-size: 0.82rem;
+    color: #555;
+    letter-spacing: 0.5px;
+  }
+
+  .bill-calc-row.total-bold .calc-value {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: var(--comic-ink-black);
+    text-align: left;
   }
 
   /* Ticket Stacking on Mobile */
