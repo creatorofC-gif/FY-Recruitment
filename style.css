@@ -1,0 +1,1776 @@
+/* ==============================================================================
+   BLOOMBOX FY RECRUITMENT 2026-27 | STYLESHEET
+   Comic-Book / Poster-Driven Interactive Web Experience
+   ============================================================================== */
+
+/* --- CSS Variables & Design Tokens --- */
+:root {
+  /* Vibrant Comic / Poster Palette */
+  --comic-cyan: #00c2cb;
+  --comic-blue-dark: #03045e;
+  --comic-blue-electric: #0055ff;
+  --comic-yellow: #ffbe0b;
+  --comic-orange: #fb5607;
+  --comic-red: #d90429;
+  --comic-ink-black: #080b0f;
+
+  /* Receipt / Paper Palette */
+  --paper-cream: #faf6ea;
+  --paper-ink: #181818;
+  --paper-faded: #4f4c46;
+
+  /* Typography Stack */
+  --font-poster: 'Bungee', 'Anton', 'Bangers', Impact, sans-serif;
+  --font-heading: 'Anton', 'Space Grotesk', Impact, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Space Grotesk', monospace;
+  --font-receipt: 'Courier Prime', 'Space Mono', monospace;
+
+  /* Shadows & Comic Offsets */
+  --comic-shadow-sm: 3px 3px 0px var(--comic-ink-black);
+  --comic-shadow-md: 6px 6px 0px var(--comic-ink-black);
+  --comic-shadow-lg: 10px 10px 0px var(--comic-ink-black);
+  --paper-shadow: 10px 16px 0px rgba(0, 0, 0, 0.45);
+
+  /* Border Strokes */
+  --comic-border-thick: 4px solid var(--comic-ink-black);
+  --comic-border-med: 3px solid var(--comic-ink-black);
+
+  /* Transitions */
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --transition-fast: 0.18s ease;
+}
+
+/* --- Global Reset & Box Sizing --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body.comic-theme {
+  background-color: #0096c7;
+  background-image:
+    radial-gradient(circle at 50% 10%, #00b4d8 0%, #0077b6 60%, #03045e 100%);
+  color: var(--comic-ink-black);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* --- Texture Overlays (Halftone Dots & Speed Lines) --- */
+.bg-halftone-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  background-image: radial-gradient(circle, #022b52 16%, transparent 18%);
+  background-size: 18px 18px;
+  opacity: 0.38;
+}
+
+.comic-speed-lines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  background: repeating-linear-gradient(-45deg,
+      transparent,
+      transparent 45px,
+      rgba(255, 255, 255, 0.02) 45px,
+      rgba(255, 255, 255, 0.02) 48px);
+  opacity: 0.6;
+}
+
+/* Accessibility Skip Link */
+.skip-link {
+  position: absolute;
+  top: -60px;
+  left: 1rem;
+  background: var(--comic-yellow);
+  color: #000;
+  padding: 0.6rem 1.2rem;
+  font-weight: 800;
+  border: var(--comic-border-med);
+  z-index: 9999;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* BloomBox Logo & 3D Isometric Cube (Used in Footer) */
+.bb-cube-icon {
+  width: 32px;
+  height: 32px;
+  position: relative;
+  display: inline-block;
+  perspective: 200px;
+}
+
+.bb-cube-icon.mini {
+  width: 24px;
+  height: 24px;
+}
+
+.bb-cube-face {
+  position: absolute;
+  border: 1.5px solid var(--comic-ink-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.bb-cube-face.top {
+  width: 22px;
+  height: 12px;
+  top: 1px;
+  left: 5px;
+  background: #00e5ff;
+  transform: skewX(-35deg) scaleY(0.7);
+}
+
+.bb-cube-face.left {
+  width: 13px;
+  height: 18px;
+  top: 10px;
+  left: 2px;
+  background: #0077b6;
+  transform: skewY(25deg);
+}
+
+.bb-cube-face.right {
+  width: 13px;
+  height: 18px;
+  top: 10px;
+  left: 17px;
+  background: #023e8a;
+  transform: skewY(-25deg);
+}
+
+/* ==============================================================================
+   SECTION 1: HERO / THE OFFICIAL RECRUITMENT POSTER
+   ============================================================================== */
+.section-hero {
+  position: relative;
+  z-index: 2;
+  padding: 2rem 1rem 3rem 1rem;
+  min-height: calc(100vh - 20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.hero-poster-frame {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+  border: var(--comic-border-thick);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 10px 14px 0px var(--comic-ink-black), 0 20px 40px rgba(0, 0, 0, 0.45);
+  background: #021224;
+  transition: transform 0.3s var(--ease-spring), box-shadow 0.3s ease;
+}
+
+.hero-poster-frame:hover {
+  transform: translateY(-4px);
+  box-shadow: 12px 18px 0px var(--comic-ink-black), 0 25px 50px rgba(0, 0, 0, 0.55);
+}
+
+.poster-hero-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Scroll Prompt */
+.hero-scroll-prompt {
+  margin-top: 2rem;
+  text-align: center;
+  z-index: 10;
+}
+
+.scroll-link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  gap: 0.4rem;
+}
+
+.scroll-tag {
+  background: var(--comic-yellow);
+  color: var(--comic-ink-black);
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  padding: 0.4rem 1rem;
+  border: var(--comic-border-med);
+  box-shadow: var(--comic-shadow-sm);
+  border-radius: 2px;
+}
+
+.scroll-arrow-anim {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 0.6;
+  text-shadow: 2px 2px 0px var(--comic-ink-black);
+  animation: bounceDown 1.5s infinite;
+}
+
+@keyframes bounceDown {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+/* ==============================================================================
+   SECTION HEADINGS & COMIC PANELS
+   ============================================================================== */
+.section-content {
+  position: relative;
+  z-index: 2;
+  padding: 4.5rem 1.2rem;
+}
+
+.content-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-comic-header {
+  margin-bottom: 2.5rem;
+}
+
+.section-comic-header.center {
+  text-align: center;
+}
+
+.comic-tag-badge {
+  display: inline-block;
+  background: var(--comic-cyan);
+  color: var(--comic-ink-black);
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  letter-spacing: 1.5px;
+  padding: 0.25rem 0.8rem;
+  border: var(--comic-border-med);
+  box-shadow: var(--comic-shadow-sm);
+  margin-bottom: 0.5rem;
+}
+
+.comic-tag-badge.yellow {
+  background: var(--comic-yellow);
+}
+
+.comic-tag-badge.orange {
+  background: var(--comic-orange);
+  color: #fff;
+}
+
+.comic-tag-badge.red {
+  background: var(--comic-red);
+  color: #fff;
+}
+
+.section-heading {
+  font-family: var(--font-poster);
+  font-size: clamp(2rem, 5.5vw, 3.8rem);
+  line-height: 1.05;
+  color: #ffffff;
+  text-shadow:
+    3px 3px 0px var(--comic-ink-black),
+    6px 6px 0px rgba(0, 0, 0, 0.4);
+  -webkit-text-stroke: 2px var(--comic-ink-black);
+}
+
+.section-subtext {
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+  font-weight: 700;
+  color: var(--comic-yellow);
+  letter-spacing: 1.5px;
+  margin-top: 0.3rem;
+  text-shadow: 1.5px 1.5px 0px var(--comic-ink-black);
+}
+
+/* Comic Grid 2 Columns */
+.comic-grid-2col {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 2rem;
+}
+
+.comic-card {
+  background: #ffffff;
+  border: var(--comic-border-thick);
+  box-shadow: var(--comic-shadow-md);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.comic-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: var(--comic-shadow-lg);
+}
+
+.card-header-bar {
+  background: #111a24;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 3px solid var(--comic-ink-black);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.card-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--comic-ink-black);
+}
+
+.card-dot.red {
+  background: #ff4d4f;
+}
+
+.card-dot.yellow {
+  background: #ffbe0b;
+}
+
+.card-dot.green {
+  background: #52c41a;
+}
+
+.card-header-title {
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-left: 0.3rem;
+}
+
+.card-body {
+  padding: 1.6rem;
+  color: var(--comic-ink-black);
+}
+
+.panel-callout {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  margin-bottom: 0.9rem;
+  color: var(--comic-red);
+}
+
+.panel-para {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.card-stickers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+}
+
+.sticker-chip {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  padding: 0.3rem 0.7rem;
+  border: 2px solid var(--comic-ink-black);
+  box-shadow: 2.5px 2.5px 0px var(--comic-ink-black);
+}
+
+.sticker-chip.cyan {
+  background: var(--comic-cyan);
+}
+
+.sticker-chip.yellow {
+  background: var(--comic-yellow);
+}
+
+.sticker-chip.orange {
+  background: var(--comic-orange);
+  color: #fff;
+}
+
+/* ==============================================================================
+   SECTION 3: WHY JOIN? (QUAD CARDS)
+   ============================================================================== */
+.cards-quad-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-comic-box {
+  background: var(--paper-cream);
+  border: var(--comic-border-thick);
+  box-shadow: var(--comic-shadow-md);
+  padding: 1.5rem 1.2rem;
+  position: relative;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.feature-comic-box:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--comic-shadow-lg);
+}
+
+.box-corner-badge {
+  position: absolute;
+  top: -12px;
+  right: 12px;
+  background: var(--comic-ink-black);
+  color: var(--comic-yellow);
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  padding: 0.2rem 0.6rem;
+  border: 2px solid var(--comic-yellow);
+}
+
+.box-icon-circle {
+  font-size: 2.2rem;
+  margin-bottom: 0.8rem;
+}
+
+.box-title {
+  font-family: var(--font-heading);
+  font-size: 1.45rem;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  margin-bottom: 0.6rem;
+  color: var(--comic-ink-black);
+}
+
+.box-desc {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #333;
+  margin-bottom: 1.2rem;
+  flex-grow: 1;
+}
+
+.box-receipt-stamp {
+  align-self: flex-start;
+  font-family: var(--font-receipt);
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: var(--comic-red);
+  border: 2px dashed var(--comic-red);
+  padding: 0.2rem 0.5rem;
+  transform: rotate(-3deg);
+}
+
+/* ==============================================================================
+   SECTION 4: JOB DESCRIPTION
+   ============================================================================== */
+.job-desc-showcase {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.job-desc-callout-card {
+  background: #ffffff;
+  border: var(--comic-border-thick);
+  box-shadow: var(--comic-shadow-lg);
+  border-radius: 8px;
+  padding: 3rem 2rem;
+  text-align: center;
+  position: relative;
+  margin-top: 1.5rem;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.job-desc-callout-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 14px 14px 0px var(--comic-ink-black);
+}
+
+.jd-card-icon {
+  font-size: 3.5rem;
+  line-height: 1;
+  margin-bottom: 0.8rem;
+}
+
+.jd-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  color: var(--comic-ink-black);
+  margin-bottom: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+.jd-card-description {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: #3a3a3a;
+  max-width: 620px;
+  margin: 0 auto 2.2rem auto;
+  line-height: 1.6;
+}
+
+.jd-card-btn-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.comic-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  background: var(--comic-yellow);
+  color: var(--comic-ink-black);
+  text-decoration: none;
+  padding: 0.9rem 1.6rem;
+  border: 3.5px solid var(--comic-ink-black);
+  box-shadow: 5px 5px 0px var(--comic-ink-black);
+  border-radius: 6px;
+  font-family: var(--font-heading);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+
+.comic-download-btn:hover {
+  background: #ffea00;
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0px var(--comic-ink-black);
+  color: var(--comic-ink-black);
+}
+
+.comic-download-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px var(--comic-ink-black);
+}
+
+.comic-download-btn.jd-large-btn {
+  padding: 1.2rem 2.4rem;
+  box-shadow: 7px 7px 0px var(--comic-ink-black);
+  background: linear-gradient(135deg, #ffd000 0%, #ffbe0b 100%);
+}
+
+.comic-download-btn.jd-large-btn:hover {
+  background: linear-gradient(135deg, #ffea00 0%, #ffd000 100%);
+  transform: translate(-4px, -4px);
+  box-shadow: 11px 11px 0px var(--comic-ink-black);
+}
+
+.comic-download-btn.jd-large-btn .btn-icon {
+  font-size: 2.2rem;
+}
+
+.comic-download-btn.jd-large-btn .btn-label {
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+}
+
+.comic-download-btn.jd-large-btn .btn-subtext {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.comic-download-btn .btn-icon {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.comic-download-btn .btn-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.comic-download-btn .btn-label {
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.comic-download-btn .btn-subtext {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #333;
+  letter-spacing: 0.2px;
+}
+
+/* ==============================================================================
+   SECTION 5: RECRUITMENT DETAILS (COMIC TICKET)
+   ============================================================================== */
+.details-ticket-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.comic-ticket {
+  display: flex;
+  background: var(--paper-cream);
+  border: var(--comic-border-thick);
+  box-shadow: var(--comic-shadow-lg);
+  position: relative;
+  border-radius: 4px;
+}
+
+.ticket-left-stub {
+  width: 80px;
+  background: var(--comic-yellow);
+  border-right: 3px dashed var(--comic-ink-black);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.4rem 0.4rem;
+}
+
+/* Notches on Ticket Edge */
+.stub-notch {
+  position: absolute;
+  right: -15px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #0077b6;
+  /* Matches section backdrop */
+  border: 3.5px solid var(--comic-ink-black);
+}
+
+.stub-notch.top {
+  top: -15px;
+}
+
+.stub-notch.bottom {
+  bottom: -15px;
+}
+
+.stub-vertical-text {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  letter-spacing: 2px;
+  color: var(--comic-ink-black);
+}
+
+.stub-barcode {
+  font-family: var(--font-receipt);
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  writing-mode: vertical-rl;
+}
+
+.ticket-main-body {
+  flex-grow: 1;
+  padding: 1.8rem 2rem;
+}
+
+.ticket-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.6rem;
+}
+
+.ticket-grid.ticket-grid-centered {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.ticket-info-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.ticket-info-block.text-center {
+  align-items: center;
+  text-align: center;
+}
+
+.info-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: var(--paper-faded);
+  margin-bottom: 0.2rem;
+}
+
+.info-val {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
+  color: var(--comic-ink-black);
+}
+
+.info-val.highlight-red {
+  color: var(--comic-red);
+  font-size: 1.65rem;
+}
+
+.info-sub {
+  font-size: 0.82rem;
+  color: #555;
+  margin-top: 0.15rem;
+}
+
+/* ==============================================================================
+   SECTION 6 & 7: THE GRAND BILL & INTERACTIVE FORM
+   ============================================================================== */
+.section-form-bill {
+  position: relative;
+  z-index: 5;
+  padding: 5rem 1rem 6rem 1rem;
+}
+
+.receipt-bridge-spool {
+  max-width: 600px;
+  margin: 0 auto 2.5rem auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.spool-line {
+  flex: 1;
+  height: 3px;
+  background: repeating-linear-gradient(90deg,
+      var(--comic-yellow) 0px,
+      var(--comic-yellow) 10px,
+      transparent 10px,
+      transparent 18px);
+}
+
+.spool-tag {
+  background: var(--comic-ink-black);
+  color: var(--comic-yellow);
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  padding: 0.35rem 0.8rem;
+  border: 2px solid var(--comic-yellow);
+  white-space: nowrap;
+}
+
+.form-bill-container {
+  max-width: 780px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* The Grand Receipt Paper */
+.grand-receipt-paper {
+  position: relative;
+  background-color: var(--paper-cream);
+  background-image:
+    radial-gradient(#eedbb4 15%, transparent 16%),
+    linear-gradient(180deg, #fffdf8 0%, var(--paper-cream) 100%);
+  background-size: 24px 24px, 100% 100%;
+  border-left: var(--comic-border-thick);
+  border-right: var(--comic-border-thick);
+  box-shadow: var(--paper-shadow);
+  padding: 2.2rem 2.8rem;
+  transform: rotate(-0.5deg);
+  transition: transform 0.3s ease;
+}
+
+/* Serrated Sawtooth Paper Edges */
+.receipt-edge-serrated {
+  position: absolute;
+  left: -4px;
+  /* match border */
+  right: -4px;
+  height: 22px;
+  background-color: var(--paper-cream);
+  z-index: 10;
+}
+
+.receipt-edge-serrated.top {
+  top: -22px;
+  border-top: var(--comic-border-thick);
+  clip-path: polygon(0% 100%, 100% 100%,
+      98% 0%, 95% 100%, 92% 0%, 89% 100%, 86% 0%, 83% 100%, 80% 0%, 77% 100%,
+      74% 0%, 71% 100%, 68% 0%, 65% 100%, 62% 0%, 59% 100%, 56% 0%, 53% 100%,
+      50% 0%, 47% 100%, 44% 0%, 41% 100%, 38% 0%, 35% 100%, 32% 0%, 29% 100%,
+      26% 0%, 23% 100%, 20% 0%, 17% 100%, 14% 0%, 11% 100%, 8% 0%, 5% 100%, 2% 0%, 0% 100%);
+}
+
+.receipt-edge-serrated.bottom {
+  bottom: -22px;
+  border-bottom: var(--comic-border-thick);
+  clip-path: polygon(0% 0%, 100% 0%,
+      98% 100%, 95% 0%, 92% 100%, 89% 0%, 86% 100%, 83% 0%, 80% 100%, 77% 0%,
+      74% 100%, 71% 0%, 68% 100%, 65% 0%, 62% 100%, 59% 0%, 56% 100%, 53% 0%,
+      50% 100%, 47% 0%, 44% 100%, 41% 0%, 38% 100%, 35% 0%, 32% 100%, 29% 0%,
+      26% 100%, 23% 0%, 20% 100%, 17% 0%, 14% 100%, 11% 0%, 8% 100%, 5% 0%, 2% 100%, 0% 0%);
+}
+
+/* Bill Header */
+.bill-header {
+  text-align: center;
+  margin-bottom: 1.8rem;
+  color: var(--paper-ink);
+}
+
+.bill-meta-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-receipt);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 0.4rem;
+}
+
+.bill-main-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: 1px;
+  line-height: 1;
+  color: var(--comic-ink-black);
+}
+
+.bill-tagline {
+  font-family: var(--font-receipt);
+  font-size: 1.05rem;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--paper-faded);
+  margin-top: 0.3rem;
+}
+
+.bill-divider-stars {
+  font-family: var(--font-receipt);
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #666;
+  margin: 0.8rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.bill-timestamps {
+  font-family: var(--font-receipt);
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.6;
+  color: #333;
+}
+
+.ts-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.bill-divider-double {
+  border-top: 3px double #222;
+  margin: 0.8rem 0 1.2rem 0;
+}
+
+/* ==============================================================================
+   DYNAMIC FORM FIELDS (INTEGRATED ON THE BILL)
+   ============================================================================== */
+.form-fields-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.form-field-group {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.field-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.3rem;
+}
+
+.field-label {
+  font-family: var(--font-mono);
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--paper-ink);
+  text-transform: uppercase;
+}
+
+.field-required-star {
+  color: var(--comic-red);
+  font-weight: 900;
+  margin-left: 0.2rem;
+}
+
+.field-item-code {
+  font-family: var(--font-receipt);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #777;
+}
+
+/* Form Inputs (Dashed Paper Style) */
+.form-input-ctrl,
+.form-select-ctrl {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2.5px dashed #444;
+  border-radius: 0;
+  font-family: var(--font-receipt);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--comic-ink-black);
+  padding: 0.5rem 0.2rem;
+  outline: none;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  min-height: 44px;
+  /* Touch friendly */
+}
+
+.form-input-ctrl:focus,
+.form-select-ctrl:focus {
+  border-bottom: 3px solid var(--comic-blue-electric);
+  background-color: #fff9e6;
+}
+
+/* Custom Select Dropdown */
+.form-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.form-select-ctrl {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  padding-right: 2rem;
+}
+
+.select-dropdown-arrow {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 0.85rem;
+  color: var(--comic-ink-black);
+}
+
+/* File Upload Dropzone (Paper / Receipt Style) */
+.form-file-dropzone {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  border: 2.5px dashed #555;
+  border-radius: 4px;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast);
+  outline: none;
+  position: relative;
+}
+
+.form-file-dropzone:hover,
+.form-file-dropzone:focus-visible,
+.form-file-dropzone.dragover {
+  border-color: var(--comic-blue-electric);
+  background-color: #fff9e6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 85, 255, 0.15);
+}
+
+.form-file-dropzone.file-selected {
+  border: 2.5px solid #2b9348;
+  background-color: #eafbe8;
+}
+
+.form-file-input-hidden {
+  display: none;
+}
+
+.dropzone-content {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.dropzone-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.dropzone-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex-grow: 1;
+}
+
+.dropzone-title {
+  font-family: var(--font-receipt);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--comic-ink-black);
+  word-break: break-word;
+}
+
+.dropzone-sub {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: #666;
+}
+
+.dropzone-browse-btn {
+  background: var(--comic-yellow);
+  color: var(--comic-ink-black);
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  letter-spacing: 0.5px;
+  padding: 0.4rem 0.8rem;
+  border: 2px solid var(--comic-ink-black);
+  box-shadow: 2px 2px 0px var(--comic-ink-black);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Resume Helper Bar (Download Template & JD) */
+.resume-helper-bar {
+  margin-top: 0.75rem;
+  background: #fdfaf2;
+  border: 1.5px dashed #444;
+  border-radius: 4px;
+  padding: 0.75rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.resume-helper-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.helper-hint-badge {
+  background: var(--comic-ink-black);
+  color: var(--comic-yellow);
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  padding: 0.15rem 0.4rem;
+  border-radius: 2px;
+}
+
+.helper-hint-text {
+  font-family: var(--font-receipt);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #555;
+}
+
+.resume-helper-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.resume-download-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  letter-spacing: 0.4px;
+  padding: 0.4rem 0.75rem;
+  border-radius: 3px;
+  border: 2px solid var(--comic-ink-black);
+  box-shadow: 2px 2px 0px var(--comic-ink-black);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+
+.resume-download-link.template-link {
+  background: #ffffff;
+  color: var(--comic-ink-black);
+}
+
+.resume-download-link.template-link:hover {
+  background: var(--comic-yellow);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--comic-ink-black);
+}
+
+.resume-download-link.jd-link {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-color: #0369a1;
+  box-shadow: 2px 2px 0px #0369a1;
+}
+
+.resume-download-link.jd-link:hover {
+  background: #bae6fd;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #0369a1;
+}
+
+.resume-download-link .link-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+/* Form Helper & Error Bubbles */
+.field-error-bubble {
+  display: none;
+  background: #ff0054;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.3rem 0.7rem;
+  border-radius: 3px;
+  border: 2px solid var(--comic-ink-black);
+  box-shadow: 2px 2px 0px var(--comic-ink-black);
+  margin-top: 0.4rem;
+  position: relative;
+  animation: shakeError 0.3s ease;
+}
+
+@keyframes shakeError {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-4px);
+  }
+
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+.form-field-group.has-error .form-input-ctrl,
+.form-field-group.has-error .form-select-ctrl,
+.form-field-group.has-error .form-file-dropzone {
+  border-color: #ff0054;
+  border-bottom: 3px solid #ff0054;
+  background-color: #ffe6eb;
+}
+
+.form-field-group.has-error .field-error-bubble {
+  display: inline-block;
+}
+
+/* Bill Subtotal Block */
+.bill-subtotal-block {
+  margin: 1.8rem 0 1.2rem 0;
+  font-family: var(--font-receipt);
+}
+
+.bill-calc-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.2rem 0;
+  color: #333;
+}
+
+.bill-calc-row.total-bold {
+  font-size: 1.18rem;
+  font-weight: 900;
+  color: var(--comic-ink-black);
+  padding: 0.4rem 0;
+}
+
+/* Submission Actions Block */
+.bill-actions-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.form-alert-banner {
+  width: 100%;
+  background: #ff4d4f;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  font-weight: 800;
+  padding: 0.7rem 1rem;
+  border: var(--comic-border-med);
+  box-shadow: 3px 3px 0px var(--comic-ink-black);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* 3D Comic Submit Button */
+.btn-bill-submit {
+  width: 100%;
+  background: var(--comic-red);
+  color: #ffffff;
+  border: var(--comic-border-thick);
+  box-shadow: 6px 6px 0px var(--comic-ink-black);
+  border-radius: 4px;
+  padding: 1rem 1.6rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+  min-height: 60px;
+}
+
+.btn-bill-submit:hover:not(:disabled),
+.btn-bill-submit:focus-visible:not(:disabled) {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0px var(--comic-ink-black);
+  background: #ff1a40;
+}
+
+.btn-bill-submit:active:not(:disabled) {
+  transform: translate(3px, 3px);
+  box-shadow: 3px 3px 0px var(--comic-ink-black);
+}
+
+.btn-bill-submit:disabled {
+  background: #8892b0;
+  cursor: not-allowed;
+  opacity: 0.8;
+  transform: none;
+  box-shadow: 4px 4px 0px var(--comic-ink-black);
+}
+
+.btn-text {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 3.5vw, 2.1rem);
+  letter-spacing: 1.5px;
+  line-height: 1;
+}
+
+.btn-subtext {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+
+.bill-disclaimer {
+  font-family: var(--font-receipt);
+  font-size: 0.76rem;
+  text-align: center;
+  color: #666;
+  line-height: 1.4;
+  max-width: 90%;
+}
+
+/* ==============================================================================
+   SUCCESS CONFIRMATION PANEL
+   ============================================================================== */
+.bill-confirmation-panel {
+  text-align: center;
+  padding: 1rem 0;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.confirmation-badge-box {
+  background: #e6f7ff;
+  border: var(--comic-border-med);
+  box-shadow: 4px 4px 0px var(--comic-ink-black);
+  padding: 1.4rem;
+  margin: 1.2rem 0;
+}
+
+.conf-star {
+  color: #faad14;
+  font-size: 1.2rem;
+  letter-spacing: 4px;
+}
+
+.confirmation-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: 1px;
+  color: var(--comic-blue-dark);
+  margin: 0.4rem 0 0.2rem 0;
+}
+
+.confirmation-subtitle {
+  font-family: var(--font-receipt);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #333;
+}
+
+/* Summary of items printed */
+.confirmed-data-summary {
+  background: #ffffff;
+  border: 2px dashed #444;
+  padding: 1.2rem 1.4rem;
+  margin: 1.2rem 0;
+  text-align: left;
+  font-family: var(--font-receipt);
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted #ccc;
+  padding: 0.2rem 0;
+}
+
+.summary-label {
+  font-weight: 700;
+  color: #555;
+}
+
+.summary-val {
+  font-weight: 900;
+  color: #000;
+}
+
+.confirmation-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.4rem;
+}
+
+.btn-print-receipt,
+.btn-new-app {
+  background: var(--comic-yellow);
+  color: var(--comic-ink-black);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  letter-spacing: 1px;
+  padding: 0.7rem 1.4rem;
+  border: var(--comic-border-med);
+  box-shadow: var(--comic-shadow-sm);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.btn-new-app {
+  background: #ffffff;
+}
+
+.btn-print-receipt:hover,
+.btn-new-app:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--comic-shadow-md);
+}
+
+/* Bill Footer */
+.bill-footer {
+  text-align: center;
+  margin-top: 1.6rem;
+  font-family: var(--font-receipt);
+}
+
+.bill-barcode-container {
+  width: 100%;
+  margin: 0.8rem 0;
+}
+
+.bill-barcode-img {
+  width: 80%;
+  max-width: 340px;
+  height: auto;
+  display: inline-block;
+}
+
+.receipt-cut-line {
+  font-size: 0.82rem;
+  letter-spacing: 2px;
+  color: #777;
+  margin: 0.6rem 0;
+}
+
+.bill-end-msg {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #222;
+  letter-spacing: 0.5px;
+}
+
+/* ==============================================================================
+   GLOBAL FOOTER
+   ============================================================================== */
+.site-footer {
+  background: #021224;
+  border-top: var(--comic-border-thick);
+  padding: 2.5rem 1.2rem;
+  color: #ffffff;
+  position: relative;
+  z-index: 10;
+}
+
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.footer-copy {
+  font-size: 0.88rem;
+  color: #a4b8cc;
+  line-height: 1.4;
+}
+
+.footer-copy strong {
+  color: #ffffff;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: var(--comic-yellow);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: color var(--transition-fast);
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* Confetti Canvas */
+#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ==============================================================================
+   RESPONSIVE DESIGN (MOBILE-FIRST TUNING)
+   ============================================================================== */
+
+/* Tablet & Mobile Breakpoints */
+@media (max-width: 900px) {
+  .comic-grid-2col {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .grand-receipt-paper {
+    padding: 2rem 1.8rem;
+    transform: none;
+    /* Straight on tablets for readability */
+  }
+}
+
+@media (max-width: 650px) {
+  .section-hero {
+    padding: 1.2rem 0.6rem 2.5rem 0.6rem;
+  }
+
+  /* Job Description Showcase Card on Mobile */
+  .job-desc-callout-card {
+    padding: 2rem 1.2rem;
+  }
+  .jd-card-title {
+    font-size: 1.45rem;
+  }
+  .jd-card-description {
+    font-size: 0.98rem;
+    margin-bottom: 1.6rem;
+  }
+  .comic-download-btn.jd-large-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 1rem 1.2rem;
+  }
+  .comic-download-btn.jd-large-btn .btn-label {
+    font-size: 1.15rem;
+  }
+
+  /* Centered Ticket on Mobile */
+  .ticket-grid.ticket-grid-centered {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+  }
+
+  /* Resume Step Helper on Mobile */
+  .resume-helper-bar {
+    padding: 0.8rem 0.8rem;
+  }
+  .comic-download-btn.resume-template-btn {
+    width: 100%;
+    padding: 0.8rem 0.8rem;
+  }
+
+  /* Bill Receipt on Mobile: Full Width & Easy Touch */
+  .section-form-bill {
+    padding: 3rem 0.4rem 4rem 0.4rem;
+  }
+
+  .grand-receipt-paper {
+    padding: 1.6rem 0.9rem;
+    transform: none;
+    box-shadow: 6px 8px 0px rgba(0, 0, 0, 0.45);
+    border-left-width: 3px;
+    border-right-width: 3px;
+  }
+
+  .bill-main-heading {
+    font-size: 1.7rem;
+  }
+
+  /* Ticket Stacking on Mobile */
+  .comic-ticket {
+    flex-direction: column;
+  }
+
+  .ticket-left-stub {
+    width: 100%;
+    border-right: none;
+    border-bottom: 3px dashed var(--comic-ink-black);
+    padding: 0.75rem 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .stub-notch.top {
+    top: auto;
+    bottom: -13px;
+    right: auto;
+    left: -13px;
+  }
+
+  .stub-notch.bottom {
+    top: auto;
+    bottom: -13px;
+    right: -13px;
+  }
+
+  .stub-vertical-text {
+    writing-mode: horizontal-tb;
+    transform: none;
+    font-size: 0.82rem;
+    letter-spacing: 1px;
+  }
+
+  .stub-barcode {
+    writing-mode: horizontal-tb;
+    font-size: 0.95rem;
+  }
+
+  .ticket-main-body {
+    padding: 1.4rem 1.1rem;
+  }
+
+  .ticket-grid {
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-links {
+    justify-content: center;
+  }
+}
+
+/* 360px - 414px Mobile screens */
+@media (max-width: 414px) {
+  .section-hero {
+    padding: 1rem 0.4rem 2rem 0.4rem;
+  }
+
+  .hero-poster-frame {
+    box-shadow: 6px 8px 0px var(--comic-ink-black), 0 10px 25px rgba(0, 0, 0, 0.45);
+    border-width: 3px;
+  }
+
+  .scroll-tag {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .section-content {
+    padding: 3rem 0.6rem;
+  }
+
+  .section-heading {
+    font-size: 1.75rem;
+  }
+
+  .panel-callout {
+    font-size: 1.25rem;
+  }
+
+  .card-body {
+    padding: 1.2rem 1rem;
+  }
+
+  .feature-comic-box {
+    padding: 1.2rem 1rem;
+  }
+
+  .grand-receipt-paper {
+    padding: 1.4rem 0.75rem;
+  }
+
+  .store-name {
+    font-size: 1.5rem;
+  }
+
+  .form-input-ctrl,
+  .form-select-ctrl {
+    font-size: 1.05rem;
+  }
+
+  .btn-text {
+    font-size: 1.15rem;
+  }
+
+  .btn-subtext {
+    font-size: 0.72rem;
+  }
+}
+
+/* Print Stylesheet */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .section-hero,
+  .section-about,
+  .section-why,
+  .section-waiting,
+  .section-details,
+  .receipt-bridge-spool,
+  .btn-bill-submit,
+  .confirmation-actions,
+  .site-footer,
+  .bg-halftone-overlay,
+  .comic-speed-lines {
+    display: none !important;
+  }
+
+  .section-form-bill {
+    padding: 0 !important;
+  }
+
+  .grand-receipt-paper {
+    border: 2px solid #000 !important;
+    box-shadow: none !important;
+    transform: none !important;
+    max-width: 100% !important;
+    padding: 1rem !important;
+  }
+}
+
+/* Reduced Motion Mode */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .scroll-arrow-anim {
+    animation: none;
+  }
+}

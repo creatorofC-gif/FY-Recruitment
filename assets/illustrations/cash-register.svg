@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="100%" height="100%">
+  <!-- Vintage POS Register Terminal Base -->
+  <defs>
+    <filter id="registerShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="8" dy="10" stdDeviation="0" flood-color="#021020" />
+    </filter>
+    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b4856"/>
+      <stop offset="50%" stop-color="#2a3542"/>
+      <stop offset="100%" stop-color="#19222c"/>
+    </linearGradient>
+    <linearGradient id="screenGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#071b12"/>
+      <stop offset="100%" stop-color="#0e2a1e"/>
+    </linearGradient>
+    <pattern id="lcdGrid" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="none" stroke="#003820" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+
+  <g filter="url(#registerShadow)">
+    <!-- Machine Chassis Outer -->
+    <path d="M 60 90 L 130 10 L 470 10 L 540 90 L 580 300 L 20 300 Z" 
+          fill="url(#bodyGrad)" stroke="#09141d" stroke-width="6" stroke-linejoin="round"/>
+          
+    <!-- Machine Bevel Highlights -->
+    <path d="M 130 10 L 470 10 L 460 25 L 140 25 Z" fill="#586b7e" opacity="0.6"/>
+    <path d="M 60 90 L 130 10 L 140 25 L 75 95 Z" fill="#4d5e6e" opacity="0.5"/>
+    <path d="M 470 10 L 540 90 L 525 95 L 460 25 Z" fill="#141c24" opacity="0.7"/>
+
+    <!-- Paper Output Feed Ejection Slot -->
+    <rect x="150" y="24" width="300" height="22" rx="4" fill="#0b1118" stroke="#000" stroke-width="4"/>
+    <rect x="160" y="30" width="280" height="8" rx="2" fill="#000000"/>
+    <!-- Cyan rim on feed slot -->
+    <line x1="160" y1="40" x2="440" y2="40" stroke="#00e5ff" stroke-width="2" opacity="0.8"/>
+
+    <!-- Front Display Bezel (Angled recessed frame) -->
+    <path d="M 90 120 L 510 120 L 530 270 L 70 270 Z" 
+          fill="#1b232c" stroke="#09141d" stroke-width="5" stroke-linejoin="round"/>
+          
+    <!-- Internal screen border (Teal/Cyan pinstripe) -->
+    <path d="M 102 132 L 498 132 L 516 258 L 84 258 Z" 
+          fill="#061219" stroke="#00e5ff" stroke-width="3" stroke-linejoin="round"/>
+
+    <!-- Glowing LCD Matrix Screen -->
+    <path d="M 108 138 L 492 138 L 510 252 L 90 252 Z" 
+          fill="url(#screenGrad)"/>
+    <!-- Pixel mesh overlay -->
+    <path d="M 108 138 L 492 138 L 510 252 L 90 252 Z" 
+          fill="url(#lcdGrid)" opacity="0.5"/>
+  </g>
+
+  <!-- Green LED Text Elements on Register -->
+  <!-- Top line: ONLY COOL PEOPLE REQUIRED -->
+  <g id="ledTextTop">
+    <text x="300" y="180" text-anchor="middle" 
+          font-family="'VT323', 'Courier New', monospace" 
+          font-size="28" font-weight="700" 
+          fill="#00ff66" letter-spacing="4"
+          filter="drop-shadow(0 0 6px #00ff6688)">
+      ONLY COOL PEOPLE REQUIRED
+    </text>
+  </g>
+
+  <!-- Bottom line: DUE DATE: 27TH SEPTEMBER -->
+  <g id="ledTextBottom">
+    <text x="195" y="228" text-anchor="middle" 
+          font-family="'VT323', 'Courier New', monospace" 
+          font-size="24" font-weight="700" 
+          fill="#00e575" letter-spacing="2"
+          filter="drop-shadow(0 0 4px #00ff6666)">
+      DUE DATE:
+    </text>
+    <text x="365" y="230" text-anchor="middle" 
+          font-family="'VT323', 'Courier New', monospace" 
+          font-size="34" font-weight="900" 
+          fill="#39ff14" letter-spacing="3"
+          filter="drop-shadow(0 0 8px #39ff14cc)">
+      27TH SEPTEMBER
+    </text>
+  </g>
+</svg>

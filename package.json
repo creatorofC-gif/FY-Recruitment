@@ -1,0 +1,12 @@
+{
+  "name": "bloombox-fy-recruitment",
+  "version": "1.0.0",
+  "description": "BloomBox FY Reps Recruitment Portal",
+  "scripts": {
+    "build": "node build.js",
+    "start": "python -m http.server 8000"
+  },
+  "keywords": ["bloombox", "kjsse", "recruitment"],
+  "author": "BloomBox KJSSE",
+  "license": "MIT"
+}

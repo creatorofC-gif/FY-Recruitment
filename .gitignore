@@ -1,0 +1,15 @@
+# ==============================================================================
+# GIT IGNORE - ENVIRONMENT & SENSITIVE KEYS
+# ==============================================================================
+
+# Protect your real environment keys & Google credentials from being pushed to Git
+.env
+.env.local
+.env.*
+env.js
+
+# OS & Temp files
+.DS_Store
+Thumbs.db
+*.log
+node_modules/
