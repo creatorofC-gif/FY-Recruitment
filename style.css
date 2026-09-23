@@ -478,23 +478,30 @@ body.comic-theme {
 }
 
 /* ==============================================================================
-   SECTION 3: WHY JOIN? (QUAD CARDS)
+   SECTION 3: WHY JOIN? (5 CARDS BALANCED LAYOUT)
    ============================================================================== */
 .cards-quad-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1.8rem 1.5rem;
 }
 
 .feature-comic-box {
   background: var(--paper-cream);
   border: var(--comic-border-thick);
   box-shadow: var(--comic-shadow-md);
-  padding: 1.5rem 1.2rem;
+  padding: 1.6rem 1.3rem;
   position: relative;
   border-radius: 4px;
   display: flex;
   flex-direction: column;
+  flex: 0 1 calc(33.333% - 1.5rem);
+  min-width: 280px;
+  max-width: 350px;
+  margin: 0;
+  box-sizing: border-box;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
@@ -539,6 +546,7 @@ body.comic-theme {
 
 .box-receipt-stamp {
   align-self: flex-start;
+  margin-top: auto;
   font-family: var(--font-receipt);
   font-size: 0.85rem;
   font-weight: 900;
@@ -1654,6 +1662,13 @@ body.comic-theme {
   .ticket-grid.ticket-grid-centered {
     grid-template-columns: 1fr;
     gap: 1.4rem;
+  }
+
+  /* Why Join Cards on Mobile */
+  .feature-comic-box {
+    flex: 1 1 100%;
+    min-width: 100%;
+    max-width: 100%;
   }
 
   /* Resume Step Helper on Mobile */

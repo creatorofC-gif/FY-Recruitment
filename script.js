@@ -870,17 +870,22 @@ function initAnimations() {
   });
 
   // 5. Staggered reveal for "Why Join?" cards
-  gsap.from(".feature-comic-box", {
-    scrollTrigger: {
-      trigger: "#why-join",
-      start: "top 78%"
-    },
-    y: 50,
-    opacity: 0,
-    duration: 0.6,
-    stagger: 0.12,
-    ease: "back.out(1.4)"
-  });
+  gsap.fromTo(".feature-comic-box", 
+    { y: 40, opacity: 0 },
+    {
+      scrollTrigger: {
+        trigger: "#why-join",
+        start: "top 80%",
+        once: true
+      },
+      y: 0,
+      opacity: 1,
+      duration: 0.5,
+      stagger: 0.1,
+      ease: "power2.out",
+      clearProps: "transform"
+    }
+  );
 
   // 6. Stack card slide-in for Job Description roles
   gsap.from(".stack-card", {
