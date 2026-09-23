@@ -1537,10 +1537,25 @@ body.comic-theme {
 }
 
 .bill-end-msg {
-  font-size: 0.78rem;
+  font-family: var(--font-receipt);
+  font-size: clamp(0.72rem, 1.8vw, 0.8rem);
   font-weight: 700;
   color: #222;
   letter-spacing: 0.5px;
+  line-height: 1.5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+}
+
+.end-msg-line {
+  white-space: nowrap;
+}
+
+.end-msg-divider {
+  display: inline-block;
 }
 
 /* ==============================================================================
@@ -1746,6 +1761,18 @@ body.comic-theme {
     font-weight: 900;
     color: var(--comic-ink-black);
     text-align: left;
+  }
+
+  /* Receipt Footer on Mobile: 2 Clean Stacked Lines */
+  .bill-end-msg {
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.74rem;
+    text-align: center;
+  }
+
+  .end-msg-divider {
+    display: none;
   }
 
   /* Ticket Stacking on Mobile */
