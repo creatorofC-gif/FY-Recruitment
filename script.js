@@ -495,8 +495,7 @@ function renderFormFields() {
         const errorBubble = document.getElementById(`error-${field.id}`);
 
         if (file) {
-          // Perform thorough security, extension, magic number, and malware checks
-          if (titleEl) titleEl.textContent = "🔍 Verifying PDF security integrity...";
+          // Perform security checks silently in the background
           const check = await validatePdfSecurity(file);
 
           if (!check.valid) {
@@ -511,7 +510,7 @@ function renderFormFields() {
           const sizeKb = Math.round(file.size / 1024);
           const sizeStr = sizeKb > 1024 ? `${(sizeKb / 1024).toFixed(1)} MB` : `${sizeKb} KB`;
           if (titleEl) {
-            titleEl.innerHTML = `📄 <strong>${file.name}</strong> (${sizeStr}) <span style="color:#0077b6;font-weight:bold;margin-left:6px;">[VERIFIED PDF ✓]</span>`;
+            titleEl.innerHTML = `📄 <strong>${file.name}</strong> (${sizeStr})`;
           }
           dropzone.classList.add("file-selected");
           group.classList.remove("has-error");
@@ -863,9 +862,6 @@ function showSuccessState(formData) {
       const row = createSummaryRow(field.label.toUpperCase(), val);
       summaryContainer.appendChild(row);
     });
-
-    const statusRow = createSummaryRow("STATUS", "OFFICIALLY RECORDED IN COUNCIL LEDGER");
-    summaryContainer.appendChild(statusRow);
   }
 
   // Hide form inputs and reveal confirmation
