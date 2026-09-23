@@ -13,3 +13,4 @@ env.js
 Thumbs.db
 *.log
 node_modules/
+backend/
