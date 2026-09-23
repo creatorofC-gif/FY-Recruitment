@@ -11,19 +11,13 @@
 const ENV = window.ENV || {};
 
 const CONFIG = {
-  // Google Apps Script Web App URL from env.js / Vercel Environment Variables
-  googleScriptUrl:
-    ENV.GOOGLE_APPS_SCRIPT_URL ||
-    "https://script.google.com/a/macros/somaiya.edu/s/AKfycbzH7XKf1CpiR7oJaJO7f0CLKIOKSlA5b7PegQB3O1nyrT1Gt7vJ4U1rKXV7qb2hLJtg8g/exec",
+  // Loaded strictly from env.js (local) or Vercel Environment Variables (production)
+  googleScriptUrl: ENV.GOOGLE_APPS_SCRIPT_URL || "",
   sheetName: ENV.SHEET_NAME || "Registrations",
   spreadsheetId: ENV.SPREADSHEET_ID || "",
   googleDriveFolderLink: ENV.GOOGLE_DRIVE_FOLDER_LINK || "",
-  templateDownloadUrl:
-    ENV.TEMPLATE_DOWNLOAD_URL ||
-    "https://drive.google.com/file/d/1CduZsoCi3-rLxUYmu-p9im5kQkzUJjHv/view?usp=sharing",
-  jobDescriptionUrl:
-    ENV.JOB_DESCRIPTION_URL ||
-    "https://drive.google.com/file/d/1VBnrb0XzE63MFTMkqZ7oa2tfcV9OA-jW/view?usp=sharing",
+  templateDownloadUrl: ENV.TEMPLATE_DOWNLOAD_URL || "",
+  jobDescriptionUrl: ENV.JOB_DESCRIPTION_URL || "",
 
   // Form Fields Configuration
   // Easy to add, modify, or reorder recruitment fields
