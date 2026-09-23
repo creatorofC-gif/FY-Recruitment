@@ -104,10 +104,10 @@ function doPost(e) {
       headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
     }
 
-    // If headers are completely missing, initialize them
-    if (headers.length === 0 || !headers[0]) {
-      headers = DEFAULT_HEADERS;
-      sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    const headerStrings = headers.map(h => String(h).trim().toLowerCase());
+    // If headers are missing or don't have the Resume column, update Row 1 automatically
+    if (headers.length === 0 || !headers[0] || !headerStrings.includes("resume")) {
+      sheet.getRange(1, 1, 1, DEFAULT_HEADERS.length).setValues([DEFAULT_HEADERS]);
       formatHeaderRow(sheet);
     }
 
@@ -238,4 +238,27 @@ function testDriveConnection() {
   } catch (err) {
     Logger.log("ERROR accessing folder: " + err.toString());
   }
+}
+
+/**
+ * ONE-CLICK HEADER FIX:
+ * Run this function once in the Apps Script editor to immediately add
+ * the 'Resume' column into Row 1 of your Google Sheet!
+ */
+function updateSheetHeaders() {
+  let ss = null;
+  const SCRIPT_PROPS = PropertiesService.getScriptProperties();
+  const SPREADSHEET_ID = SCRIPT_PROPS.getProperty("SPREADSHEET_ID") || "";
+  const SHEET_NAME = SCRIPT_PROPS.getProperty("SHEET_NAME") || "Registrations";
+  
+  if (SPREADSHEET_ID) {
+    ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  } else {
+    ss = SpreadsheetApp.getActiveSpreadsheet();
+  }
+  
+  let sheet = ss.getSheetByName(SHEET_NAME) || ss.getActiveSheet();
+  sheet.getRange(1, 1, 1, DEFAULT_HEADERS.length).setValues([DEFAULT_HEADERS]);
+  formatHeaderRow(sheet);
+  Logger.log("✅ Sheet headers updated successfully with Resume column!");
 }
