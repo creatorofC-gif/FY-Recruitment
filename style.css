@@ -328,6 +328,12 @@ body.comic-theme {
   text-shadow: 1.5px 1.5px 0px var(--comic-ink-black);
 }
 
+/* About Card Wrapper (Centered Single Card) */
+.about-card-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
 /* Comic Grid 2 Columns */
 .comic-grid-2col {
   display: grid;
@@ -478,12 +484,12 @@ body.comic-theme {
 }
 
 /* ==============================================================================
-   SECTION 3: WHY JOIN? (4 CARDS IN ONE LEVEL)
+   SECTION 3: WHY JOIN? (6 CARDS - 3x2 BALANCED GRID)
    ============================================================================== */
 .cards-quad-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
   align-items: stretch;
 }
 
@@ -491,7 +497,7 @@ body.comic-theme {
   background: var(--paper-cream);
   border: var(--comic-border-thick);
   box-shadow: var(--comic-shadow-md);
-  padding: 1.5rem 1.15rem;
+  padding: 1.6rem 1.3rem;
   position: relative;
   border-radius: 4px;
   display: flex;

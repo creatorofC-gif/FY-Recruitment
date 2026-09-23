@@ -962,28 +962,21 @@ function initAnimations() {
   });
 
   // 4. Scroll reveals for "What is BloomBox" section
-  gsap.from(".main-story-card", {
-    scrollTrigger: {
-      trigger: "#what-is-bloombox",
-      start: "top 80%"
-    },
-    x: -40,
-    opacity: 0,
-    duration: 0.8,
-    ease: "power2.out"
-  });
-
-  gsap.from(".sub-story-card", {
-    scrollTrigger: {
-      trigger: "#what-is-bloombox",
-      start: "top 80%"
-    },
-    x: 40,
-    opacity: 0,
-    duration: 0.8,
-    delay: 0.15,
-    ease: "power2.out"
-  });
+  gsap.fromTo(".main-story-card", 
+    { y: 40, opacity: 0 },
+    {
+      scrollTrigger: {
+        trigger: "#what-is-bloombox",
+        start: "top 80%",
+        once: true
+      },
+      y: 0,
+      opacity: 1,
+      duration: 0.7,
+      ease: "power2.out",
+      clearProps: "transform"
+    }
+  );
 
   // 5. Staggered reveal for "Why Join?" cards
   gsap.fromTo(".feature-comic-box", 
