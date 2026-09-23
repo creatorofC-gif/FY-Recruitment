@@ -405,6 +405,43 @@ body.comic-theme {
   margin-bottom: 1rem;
 }
 
+.panel-tagline-bold {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  letter-spacing: 0.5px;
+  color: var(--comic-ink-black);
+  margin-top: 1.4rem;
+  margin-bottom: 0;
+}
+
+.card-perks-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.card-perks-list li {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #222;
+  position: relative;
+  padding-left: 0.2rem;
+}
+
+.card-perks-list li strong {
+  color: var(--comic-ink-black);
+}
+
+.panel-closer-text {
+  font-size: 1.02rem;
+  margin-top: 1.3rem;
+  margin-bottom: 0;
+  color: var(--comic-ink-black);
+}
+
 .card-stickers {
   display: flex;
   flex-wrap: wrap;
