@@ -478,29 +478,26 @@ body.comic-theme {
 }
 
 /* ==============================================================================
-   SECTION 3: WHY JOIN? (5 CARDS BALANCED LAYOUT)
+   SECTION 3: WHY JOIN? (4 CARDS IN ONE LEVEL)
    ============================================================================== */
 .cards-quad-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
   align-items: stretch;
-  gap: 1.8rem 1.5rem;
 }
 
 .feature-comic-box {
   background: var(--paper-cream);
   border: var(--comic-border-thick);
   box-shadow: var(--comic-shadow-md);
-  padding: 1.6rem 1.3rem;
+  padding: 1.5rem 1.15rem;
   position: relative;
   border-radius: 4px;
   display: flex;
   flex-direction: column;
-  flex: 0 1 calc(33.333% - 1.5rem);
-  min-width: 280px;
-  max-width: 350px;
   margin: 0;
+  width: 100%;
   box-sizing: border-box;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
@@ -1626,6 +1623,11 @@ body.comic-theme {
     gap: 1.5rem;
   }
 
+  .cards-quad-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.4rem;
+  }
+
   .grand-receipt-paper {
     padding: 2rem 1.8rem;
     transform: none;
@@ -1634,6 +1636,10 @@ body.comic-theme {
 }
 
 @media (max-width: 650px) {
+  .cards-quad-grid {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+  }
   .section-hero {
     padding: 1.2rem 0.6rem 2.5rem 0.6rem;
   }
