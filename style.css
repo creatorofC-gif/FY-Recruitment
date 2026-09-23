@@ -405,40 +405,46 @@ body.comic-theme {
   margin-bottom: 1rem;
 }
 
-.panel-tagline-bold {
+.card-section-subtitle {
   font-family: var(--font-heading);
   font-size: 1.25rem;
   letter-spacing: 0.5px;
   color: var(--comic-ink-black);
-  margin-top: 1.4rem;
-  margin-bottom: 0;
+  margin: 1.4rem 0 0.6rem 0;
 }
 
-.card-perks-list {
+.card-feature-list {
   list-style: none;
   padding: 0;
-  margin: 1.1rem 0;
+  margin: 0.8rem 0 1.2rem 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
-.card-perks-list li {
+.card-feature-list li {
   font-size: 0.95rem;
   line-height: 1.5;
   color: #222;
-  position: relative;
-  padding-left: 0.2rem;
 }
 
-.card-perks-list li strong {
+.card-feature-list li strong {
   color: var(--comic-ink-black);
 }
 
+.panel-tagline-bold {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  letter-spacing: 0.5px;
+  color: var(--comic-red);
+  margin-top: 1.2rem;
+}
+
 .panel-closer-text {
-  font-size: 1.02rem;
-  margin-top: 1.3rem;
-  margin-bottom: 0;
+  font-size: 1rem;
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  border-top: 2px dashed rgba(0, 0, 0, 0.18);
   color: var(--comic-ink-black);
 }
 
