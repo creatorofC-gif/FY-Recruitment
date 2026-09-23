@@ -142,33 +142,36 @@ function doPost(e) {
         const safeFileName = appId + "_" + safeStudentName + "_Resume.pdf";
         const blob = Utilities.newBlob(decoded, "application/pdf", safeFileName);
 
-        // Try primary target folder: 148khR8YTpYfPiv3bOzsYP1h0opD4IGOJ
+        // Primary Target Folder: 148khR8YTpYfPiv3bOzsYP1h0opD4IGOJ
         const targetFolderId = "148khR8YTpYfPiv3bOzsYP1h0opD4IGOJ";
         let targetFolder = null;
-        let createdFile = null;
+        
         try {
           targetFolder = DriveApp.getFolderById(targetFolderId);
-          createdFile = targetFolder.createFile(blob);
-          resumeStatus = "Saved to Drive";
-        } catch (folderErr) {
-          // If permission is denied or folder not found, fallback to script owner's Drive folder
-          const fallbackName = "BloomBox FY Resumes 2026-27";
-          const fallbackFolders = DriveApp.getFoldersByName(fallbackName);
-          const fallback = fallbackFolders.hasNext() ? fallbackFolders.next() : DriveApp.createFolder(fallbackName);
-          createdFile = fallback.createFile(blob);
-          resumeStatus = "Saved to Fallback";
+        } catch (fErr) {
+          Logger.log("Drive folder access error: " + fErr.toString());
         }
 
-        if (createdFile) {
-          try {
-            createdFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-          } catch (shareErr) {}
-          const fileUrl = createdFile.getUrl();
-          submissionMap["resume"] = '=HYPERLINK("' + fileUrl + '", "📄 View Resume")';
+        if (!targetFolder) {
+          throw new Error("Cannot open target folder (" + targetFolderId + "). Please ensure script owner has Editor access.");
         }
+
+        // Create file strictly inside the specified folder
+        const createdFile = targetFolder.createFile(blob);
+        
+        // Enable viewing with link
+        try {
+          createdFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+        } catch (shareErr) {
+          Logger.log("Sharing warning: " + shareErr.toString());
+        }
+
+        const fileUrl = createdFile.getUrl();
+        submissionMap["resume"] = '=HYPERLINK("' + fileUrl + '", "📄 View Resume")';
+        resumeStatus = "Saved in Folder: " + targetFolder.getName();
       } catch (driveErr) {
-        resumeStatus = "Drive Error: " + driveErr.message;
-        submissionMap["resume"] = "Upload failed: " + driveErr.message;
+        resumeStatus = "Upload Error: " + driveErr.message;
+        submissionMap["resume"] = "Error: " + driveErr.message;
         Logger.log("Drive save error: " + driveErr.toString());
       }
     }
@@ -230,13 +233,16 @@ function createJsonResponse(obj) {
 
 function testDriveConnection() {
   const targetFolderId = "148khR8YTpYfPiv3bOzsYP1h0opD4IGOJ";
+  Logger.log("Testing connection to target folder: " + targetFolderId);
   try {
     const folder = DriveApp.getFolderById(targetFolderId);
-    Logger.log("SUCCESS! Connected to target folder: " + folder.getName());
-    const testFile = folder.createFile("test_connection.txt", "BloomBox Google Drive Integration Test");
-    Logger.log("SUCCESS! File created in folder: " + testFile.getUrl());
+    Logger.log("✅ SUCCESS! Found folder: '" + folder.getName() + "'");
+    const testFile = folder.createFile("BLOOMBOX_VERIFY.txt", "Test file created successfully on " + new Date().toISOString());
+    Logger.log("✅ SUCCESS! File created directly in folder: " + testFile.getUrl());
+    Logger.log("Check your folder now: https://drive.google.com/drive/folders/" + targetFolderId);
   } catch (err) {
-    Logger.log("ERROR accessing folder: " + err.toString());
+    Logger.log("❌ ERROR: " + err.toString());
+    Logger.log("Please ensure the Google account running this script (" + Session.getActiveUser().getEmail() + ") is an EDITOR of this folder.");
   }
 }
 
