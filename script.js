@@ -53,11 +53,11 @@ const CONFIG = {
       name: "phone",
       label: "Contact Number",
       type: "tel",
-      placeholder: "Your Contact Number",
+      placeholder: "10-digit Mobile Number",
       required: true,
       validation: (val) => {
-        const cleaned = val.replace(/[\s\-+()]/g, "");
-        return cleaned.length >= 10 && cleaned.length <= 15;
+        const cleaned = val.replace(/\D/g, "");
+        return cleaned.length === 10;
       },
       errorMessage: "Please enter a valid 10-digit mobile number."
     },
@@ -531,6 +531,25 @@ function renderFormFields() {
       input.placeholder = field.placeholder || "";
       input.required = !!field.required;
       input.setAttribute("aria-required", field.required ? "true" : "false");
+
+      // Phone verification: strictly 10 digits and stops typing after 10 digits
+      if (field.id === "phone" || field.type === "tel") {
+        input.maxLength = 10;
+        input.inputMode = "numeric";
+        input.pattern = "[0-9]{10}";
+        input.addEventListener("input", (e) => {
+          let val = e.target.value.replace(/\D/g, "");
+          // Handle pasting country code e.g. +91 9876543210
+          if (val.length === 12 && val.startsWith("91")) {
+            val = val.slice(2);
+          } else if (val.length === 11 && val.startsWith("0")) {
+            val = val.slice(1);
+          }
+          // Strictly stop after 10 digits
+          e.target.value = val.slice(0, 10);
+        });
+      }
+
       group.appendChild(input);
     }
 
