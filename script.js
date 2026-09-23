@@ -37,13 +37,16 @@ const CONFIG = {
       name: "email",
       label: "Somaiya Email ID",
       type: "email",
-      placeholder: "Your Somaiya ID",
+      placeholder: "e.g. yourname@somaiya.edu",
       required: true,
       validation: (val) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(val.trim());
+        if (!val) return false;
+        // Somaiya email IDs must end with @somaiya.edu
+        // Cannot start with a number, but may contain numbers in between or at the end
+        const somaiyaRegex = /^[a-zA-Z][a-zA-Z0-9._%+-]*@([a-zA-Z0-9-]+\.)*somaiya\.edu$/i;
+        return somaiyaRegex.test(val.trim());
       },
-      errorMessage: "Please enter a valid Somaiya or college email address."
+      errorMessage: "Must be a valid Somaiya ID (@somaiya.edu). It cannot start with a number."
     },
     {
       id: "phone",
@@ -113,11 +116,16 @@ const CONFIG = {
       required: true,
       validation: (val, file) => {
         if (!file) return false;
-        const isPdf = file.name.toLowerCase().endsWith(".pdf") || file.type === "application/pdf";
-        const isUnderLimit = file.size <= 10 * 1024 * 1024; // 10MB limit
-        return isPdf && isUnderLimit;
+        const lowerName = file.name.toLowerCase();
+        // Strict .pdf extension requirement
+        if (!lowerName.endsWith(".pdf")) return false;
+        // Block dangerous double/embedded extensions (e.g. file.exe.pdf, file.js.pdf)
+        const dangerousExts = /\.(exe|bat|cmd|sh|vbs|js|vbe|wsf|scr|msi|dll|hta|cpl|com|jar|php|py|ps1)\b/i;
+        if (dangerousExts.test(lowerName)) return false;
+        // Enforce valid PDF size boundary (at least 100 bytes, max 10MB)
+        return file.size >= 100 && file.size <= 10 * 1024 * 1024;
       },
-      errorMessage: "Please upload your resume in PDF format (under 10MB)."
+      errorMessage: "Please upload a genuine PDF resume (under 10MB). Disguised or executable files are strictly blocked."
     }
   ]
 };
@@ -217,7 +225,107 @@ function initReceiptHeader() {
 }
 
 // ==============================================================================
-// 4. DYNAMIC FORM GENERATOR
+// 4. PDF SECURITY & INTEGRITY VALIDATOR
+// ==============================================================================
+/**
+ * Rigorous PDF Security & Anti-Malware Validator:
+ * 1. Checks file extension is strictly .pdf (case-insensitive)
+ * 2. Blocks dangerous double extensions (e.g. malicious.pdf.exe, file.exe.pdf, file.js.pdf)
+ * 3. Enforces size boundaries (min 100 bytes to prevent empty/corrupt files, max 10MB)
+ * 4. Inspects binary header via ArrayBuffer to verify genuine PDF Magic Number (%PDF-)
+ * 5. Rejects executable signatures (Windows PE/MZ, Linux ELF, Mach-O) disguised as PDFs
+ * 6. Scans header buffer for active malware triggers (/Launch actions, inline scripts)
+ */
+async function validatePdfSecurity(file) {
+  if (!file) {
+    return { valid: false, error: "Please select your resume in PDF format." };
+  }
+
+  const name = file.name || "";
+  const nameLower = name.toLowerCase();
+
+  // 1. Extension must end strictly with .pdf
+  if (!nameLower.endsWith(".pdf")) {
+    return { valid: false, error: "Invalid file format: Only .pdf files are accepted." };
+  }
+
+  // 2. Reject malicious double/embedded extensions (e.g. test.exe.pdf, test.pdf.exe, test.vbs.pdf)
+  const dangerousExtPattern = /\.(exe|bat|cmd|sh|vbs|js|vbe|wsf|scr|msi|dll|hta|cpl|com|jar|php|py|ps1|reg|bin|app)\b/i;
+  if (dangerousExtPattern.test(nameLower)) {
+    return { valid: false, error: "Security Alert: Disguised or executable extension detected!" };
+  }
+
+  // 3. File size boundaries (min 100 bytes, max 10MB)
+  if (file.size < 100) {
+    return { valid: false, error: "The selected file is empty or corrupted (under 100 bytes)." };
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    return { valid: false, error: "File too large: Resume must be under 10MB." };
+  }
+
+  // 4. Binary Inspection using ArrayBuffer
+  try {
+    const chunk = file.slice(0, 2048);
+    const buffer = await chunk.arrayBuffer();
+    const bytes = new Uint8Array(buffer);
+
+    if (bytes.length < 5) {
+      return { valid: false, error: "Invalid or corrupted file content." };
+    }
+
+    // Windows Executable (MZ = 0x4D, 0x5A)
+    if (bytes[0] === 0x4D && bytes[1] === 0x5A) {
+      return { valid: false, error: "Security Alert: Windows executable file detected. Upload rejected!" };
+    }
+    // Linux Executable (ELF = 0x7F, 0x45, 0x4C, 0x46)
+    if (bytes[0] === 0x7F && bytes[1] === 0x45 && bytes[2] === 0x4C && bytes[3] === 0x46) {
+      return { valid: false, error: "Security Alert: Binary executable file detected. Upload rejected!" };
+    }
+    // Mach-O Executable / Universal Binary
+    if (
+      (bytes[0] === 0xFE && bytes[1] === 0xED && bytes[2] === 0xFA && (bytes[3] === 0xCE || bytes[3] === 0xCF)) ||
+      (bytes[0] === 0xCF && bytes[1] === 0xFA && bytes[2] === 0xED && bytes[3] === 0xFE) ||
+      (bytes[0] === 0xCA && bytes[1] === 0xFE && bytes[2] === 0xBA && bytes[3] === 0xBE)
+    ) {
+      return { valid: false, error: "Security Alert: Binary application file detected. Upload rejected!" };
+    }
+
+    // Verify PDF Magic Bytes (%PDF-)
+    // ASCII codes: % = 0x25, P = 0x50, D = 0x44, F = 0x46, - = 0x2D
+    let hasPdfMagic = false;
+    for (let i = 0; i < Math.min(bytes.length - 4, 1024); i++) {
+      if (
+        bytes[i] === 0x25 &&
+        bytes[i + 1] === 0x50 &&
+        bytes[i + 2] === 0x44 &&
+        bytes[i + 3] === 0x46 &&
+        bytes[i + 4] === 0x2D
+      ) {
+        hasPdfMagic = true;
+        break;
+      }
+    }
+
+    if (!hasPdfMagic) {
+      return { valid: false, error: "Security Alert: File does not have a genuine PDF header (%PDF-). Upload rejected!" };
+    }
+
+    // Check for suspicious embedded launch / script actions in header
+    const decoder = new TextDecoder("latin1");
+    const headerStr = decoder.decode(bytes);
+    if (/\/Launch\b/i.test(headerStr) || /<script[\s>]/i.test(headerStr) || /javascript:/i.test(headerStr)) {
+      return { valid: false, error: "Security Alert: Potentially malicious script or launch action detected in PDF." };
+    }
+
+    return { valid: true, error: null };
+  } catch (err) {
+    console.error("PDF validation error:", err);
+    return { valid: false, error: "Error verifying PDF security integrity." };
+  }
+}
+
+// ==============================================================================
+// 5. DYNAMIC FORM GENERATOR
 // ==============================================================================
 function renderFormFields() {
   const container = document.getElementById("dynamic-form-fields");
@@ -381,30 +489,33 @@ function renderFormFields() {
       });
 
       // File selection change
-      fileInput.addEventListener("change", (e) => {
+      fileInput.addEventListener("change", async (e) => {
         const file = e.target.files && e.target.files[0];
         const titleEl = document.getElementById(`filename-${field.id}`);
+        const errorBubble = document.getElementById(`error-${field.id}`);
+
         if (file) {
-          const isPdf = file.name.toLowerCase().endsWith(".pdf") || file.type === "application/pdf";
-          if (!isPdf) {
+          // Perform thorough security, extension, magic number, and malware checks
+          if (titleEl) titleEl.textContent = "🔍 Verifying PDF security integrity...";
+          const check = await validatePdfSecurity(file);
+
+          if (!check.valid) {
             group.classList.add("has-error");
-            if (titleEl) titleEl.textContent = "❌ Please select a PDF file (.pdf)";
+            if (titleEl) titleEl.textContent = `❌ ${check.error}`;
+            if (errorBubble) errorBubble.textContent = check.error;
             fileInput.value = "";
             dropzone.classList.remove("file-selected");
             return;
           }
-          if (file.size > 10 * 1024 * 1024) {
-            group.classList.add("has-error");
-            if (titleEl) titleEl.textContent = "❌ PDF too large! Must be under 10MB.";
-            fileInput.value = "";
-            dropzone.classList.remove("file-selected");
-            return;
-          }
+
           const sizeKb = Math.round(file.size / 1024);
           const sizeStr = sizeKb > 1024 ? `${(sizeKb / 1024).toFixed(1)} MB` : `${sizeKb} KB`;
-          if (titleEl) titleEl.innerHTML = `📄 <strong>${file.name}</strong> (${sizeStr})`;
+          if (titleEl) {
+            titleEl.innerHTML = `📄 <strong>${file.name}</strong> (${sizeStr}) <span style="color:#0077b6;font-weight:bold;margin-left:6px;">[VERIFIED PDF ✓]</span>`;
+          }
           dropzone.classList.add("file-selected");
           group.classList.remove("has-error");
+          if (errorBubble) errorBubble.textContent = field.errorMessage || "Please fill this field correctly.";
         } else {
           dropzone.classList.remove("file-selected");
           if (titleEl) titleEl.textContent = "Click or Drag & Drop Resume (PDF)";
@@ -486,10 +597,10 @@ function initFormHandlers() {
       timestamp: new Date().toISOString()
     };
 
-    CONFIG.formFields.forEach((field) => {
+    for (const field of CONFIG.formFields) {
       const inputEl = document.getElementById(`input-${field.id}`);
       const groupEl = inputEl ? inputEl.closest(".form-field-group") : null;
-      if (!inputEl || !groupEl) return;
+      if (!inputEl || !groupEl) continue;
 
       let fieldValid = true;
 
@@ -497,8 +608,13 @@ function initFormHandlers() {
         const file = inputEl.files && inputEl.files[0];
         if (field.required && !file) {
           fieldValid = false;
-        } else if (file && field.validation && !field.validation("", file)) {
-          fieldValid = false;
+        } else if (file) {
+          const check = await validatePdfSecurity(file);
+          if (!check.valid) {
+            fieldValid = false;
+            const errorBubble = document.getElementById(`error-${field.id}`);
+            if (errorBubble) errorBubble.textContent = check.error;
+          }
         }
         if (file) {
           formData.resumeFileName = file.name;
@@ -522,7 +638,7 @@ function initFormHandlers() {
       } else {
         groupEl.classList.remove("has-error");
       }
-    });
+    }
 
     // If validation fails
     if (!isValid) {
