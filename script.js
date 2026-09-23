@@ -64,7 +64,7 @@ const CONFIG = {
       label: "Year",
       type: "select",
       options: [
-        { value: "FE", label: "FE - First Year Engineering" }
+        { value: "FE", label: "FY - First Year " }
       ],
       defaultValue: "FE",
       required: true,
@@ -93,6 +93,16 @@ const CONFIG = {
       required: true,
       validation: (val) => val && val.trim() !== "",
       errorMessage: "Please select your engineering branch."
+    },
+    {
+      id: "divisionBatch",
+      name: "divisionBatch",
+      label: "Division & Batch",
+      type: "text",
+      placeholder: "e.g. Div A, Batch A1",
+      required: true,
+      validation: (val) => val && val.trim().length >= 1,
+      errorMessage: "Please enter your division and batch (e.g. Div A - A1)."
     },
     {
       id: "resume",
