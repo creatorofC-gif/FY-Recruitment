@@ -136,10 +136,14 @@ const CONFIG = {
 function getDirectDownloadUrl(url) {
   if (!url) return "";
   const cleanUrl = url.replace(/^["']|["']$/g, "").trim();
-  // Transform Google Drive share / view link into direct file download stream
-  const gDriveMatch = cleanUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (gDriveMatch && gDriveMatch[1]) {
-    return `https://drive.google.com/uc?export=download&id=${gDriveMatch[1]}`;
+  // If already an export=download direct link, return as is
+  if (cleanUrl.includes("export=download")) {
+    return cleanUrl;
+  }
+  // Transform any Google Drive share / view link into direct file download stream
+  const match = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || cleanUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    return `https://drive.google.com/uc?export=download&id=${match[1]}`;
   }
   return cleanUrl;
 }
@@ -411,6 +415,7 @@ function renderFormFields() {
           <a href="${getDirectDownloadUrl(CONFIG.templateDownloadUrl)}" 
              target="_blank" 
              rel="noopener noreferrer" 
+             download="BloomBox_FY_Resume_Template.pdf"
              class="comic-download-btn resume-template-btn" 
              title="Download official BloomBox Resume Template (PDF)">
             <span class="btn-icon">📑</span>
