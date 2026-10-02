@@ -608,6 +608,7 @@ function initFormHandlers() {
   // Form Submit Event
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    if (submitBtn && submitBtn.disabled) return;
 
     // Reset banner
     if (errorBanner) errorBanner.style.display = "none";
